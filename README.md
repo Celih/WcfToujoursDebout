@@ -1,2 +1,0 @@
-# WcfToujoursDebout
-Service ToujoursDebout

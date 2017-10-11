@@ -1,0 +1,14 @@
+C:\Users\Remi\source\repos\WcfServicesToujoursDebout\WcfServicesToujoursDebout\bin\WcfServicesToujoursDebout.dll.config
+C:\Users\Remi\source\repos\WcfServicesToujoursDebout\WcfServicesToujoursDebout\bin\WcfServicesToujoursDebout.dll
+C:\Users\Remi\source\repos\WcfServicesToujoursDebout\WcfServicesToujoursDebout\bin\WcfServicesToujoursDebout.pdb
+C:\Users\Remi\source\repos\WcfServicesToujoursDebout\WcfServicesToujoursDebout\obj\Debug\WcfServicesToujoursDebout.csproj.CoreCompileInputs.cache
+C:\Users\Remi\source\repos\WcfServicesToujoursDebout\WcfServicesToujoursDebout\obj\Debug\WcfServicesToujoursDebout.dll
+C:\Users\Remi\source\repos\WcfServicesToujoursDebout\WcfServicesToujoursDebout\obj\Debug\WcfServicesToujoursDebout.pdb
+C:\Users\Remi\source\repos\WcfServicesToujoursDebout\WcfServicesToujoursDebout\obj\Debug\WcfServicesToujoursDebout.csprojResolveAssemblyReference.cache
+C:\Users\Remi\source\repos\WcfToujoursDebout\WcfServicesToujoursDebout\bin\WcfServicesToujoursDebout.dll.config
+C:\Users\Remi\source\repos\WcfToujoursDebout\WcfServicesToujoursDebout\bin\WcfServicesToujoursDebout.dll
+C:\Users\Remi\source\repos\WcfToujoursDebout\WcfServicesToujoursDebout\bin\WcfServicesToujoursDebout.pdb
+C:\Users\Remi\source\repos\WcfToujoursDebout\WcfServicesToujoursDebout\obj\Debug\WcfServicesToujoursDebout.csprojResolveAssemblyReference.cache
+C:\Users\Remi\source\repos\WcfToujoursDebout\WcfServicesToujoursDebout\obj\Debug\WcfServicesToujoursDebout.csproj.CoreCompileInputs.cache
+C:\Users\Remi\source\repos\WcfToujoursDebout\WcfServicesToujoursDebout\obj\Debug\WcfServicesToujoursDebout.dll
+C:\Users\Remi\source\repos\WcfToujoursDebout\WcfServicesToujoursDebout\obj\Debug\WcfServicesToujoursDebout.pdb
