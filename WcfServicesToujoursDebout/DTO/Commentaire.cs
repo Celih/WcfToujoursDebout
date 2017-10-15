@@ -109,11 +109,12 @@ namespace WcfServicesToujoursDebout.DTO
         {
             Procedure procedure = new Procedure();
 
-            //user.IdPhoto = user.IdPhoto != 0 ? user.IdPhoto : null; 
-
             List<SqlParameter> sqlParam = new List<SqlParameter>
             {
-                new SqlParameter("@Nom", commentaire.IdPere)
+                new SqlParameter("@Texte", commentaire.Texte),
+                new SqlParameter("@idPere", commentaire.IdPere),
+                new SqlParameter("@Type", commentaire.TypeCommentaire),
+                new SqlParameter("@User_Creation", commentaire.IdUserCreation)
             };
 
             procedure.Execute<Commentaire>(ListProcedure.InsererCommentaire, sqlParam);
@@ -132,6 +133,8 @@ namespace WcfServicesToujoursDebout.DTO
             List<SqlParameter> sqlParam = new List<SqlParameter>
             {
                 new SqlParameter("@Id", commentaire.Id),
+                new SqlParameter("@Texte", commentaire.Texte),
+                new SqlParameter("@User_Modification", commentaire.IdUserModification),
             };
 
             procedure.Execute<Commentaire>(ListProcedure.ModifierCommentaire, sqlParam);
@@ -149,7 +152,7 @@ namespace WcfServicesToujoursDebout.DTO
             Procedure procedure = new Procedure();
             List<SqlParameter> sqlParam = new List<SqlParameter>
             {
-                new SqlParameter("@idUtilisateur", idCommentaire),
+                new SqlParameter("@idCommenatire", idCommentaire),
             };
 
             procedure.Execute<Utilisateur>(ListProcedure.SupprimerCommentaire, sqlParam);

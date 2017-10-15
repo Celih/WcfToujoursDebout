@@ -114,11 +114,14 @@ namespace WcfServicesToujoursDebout
         {
             Procedure procedure = new Procedure();
 
-            //user.IdPhoto = user.IdPhoto != 0 ? user.IdPhoto : null; 
-
             List<SqlParameter> sqlParam = new List<SqlParameter>
             {
-                new SqlParameter("@Nom", evenement.Titre)
+                new SqlParameter("@Titre", evenement.Titre),
+                new SqlParameter("@Adresse", evenement.Adresse),
+                new SqlParameter("@Date", evenement.Date.Date),
+                new SqlParameter("@Heure", evenement.Date.TimeOfDay),
+                new SqlParameter("@Description", evenement.Description),
+                new SqlParameter("@User_Creation", evenement.IdUserCreation)
             };
 
             procedure.Execute<Evenement>(ListProcedure.InsererEvenement, sqlParam);
@@ -137,8 +140,14 @@ namespace WcfServicesToujoursDebout
             List<SqlParameter> sqlParam = new List<SqlParameter>
             {
                 new SqlParameter("@Id", evenement.Id),
+                new SqlParameter("@Titre", evenement.Titre),
+                new SqlParameter("@Adresse", evenement.Adresse),
+                new SqlParameter("@Date", evenement.Date.Date),
+                new SqlParameter("@Heure", evenement.Date.TimeOfDay),
+                new SqlParameter("@Description", evenement.Description),
+                new SqlParameter("@User_Modification", evenement.IdUserModification),
             };
-            
+
             procedure.Execute<Evenement>(ListProcedure.ModifierEvenement, sqlParam);
             return true;
         }
@@ -153,7 +162,7 @@ namespace WcfServicesToujoursDebout
             Procedure procedure = new Procedure();
             List<SqlParameter> sqlParam = new List<SqlParameter>
             {
-                new SqlParameter("@idUtilisateur", idEvenement),
+                new SqlParameter("@idEvenement", idEvenement),
             };
 
             procedure.Execute<Utilisateur>(ListProcedure.SupprimerEvenement, sqlParam);

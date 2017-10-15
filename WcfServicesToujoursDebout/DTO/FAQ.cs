@@ -102,11 +102,11 @@ namespace WcfServicesToujoursDebout
         {
             Procedure procedure = new Procedure();
 
-            //user.IdPhoto = user.IdPhoto != 0 ? user.IdPhoto : null; 
-
             List<SqlParameter> sqlParam = new List<SqlParameter>
             {
-                new SqlParameter("@Nom", faq.Texte)
+                new SqlParameter("@Titre", faq.Titre),
+                new SqlParameter("@Texte", faq.Texte),
+                new SqlParameter("@User_Creation", faq.IdUserCreation)
             };
 
             procedure.Execute<FAQ>(ListProcedure.InsererFAQ, sqlParam);
@@ -125,6 +125,9 @@ namespace WcfServicesToujoursDebout
             List<SqlParameter> sqlParam = new List<SqlParameter>
             {
                 new SqlParameter("@Id", faq.Id),
+                new SqlParameter("@Titre", faq.Titre),
+                new SqlParameter("@Texte", faq.Texte),
+                new SqlParameter("@User_Modification", faq.UserModification_Libelle),
             };
 
             procedure.Execute<FAQ>(ListProcedure.ModifierFAQ, sqlParam);
@@ -142,7 +145,7 @@ namespace WcfServicesToujoursDebout
             Procedure procedure = new Procedure();
             List<SqlParameter> sqlParam = new List<SqlParameter>
             {
-                new SqlParameter("@idUtilisateur", idFAQ),
+                new SqlParameter("@idFAQ", idFAQ),
             };
 
             procedure.Execute<Utilisateur>(ListProcedure.SupprimerFAQ, sqlParam);
