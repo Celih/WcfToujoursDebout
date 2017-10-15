@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Runtime.Serialization;
+using WcfServicesToujoursDebout.Constante;
+using WcfServicesToujoursDebout.Utilitaire;
 
 namespace WcfServicesToujoursDebout
 {
@@ -81,7 +85,13 @@ namespace WcfServicesToujoursDebout
         /// <returns>Données de la Photo</returns>
         internal static Photo RecupererPhoto(int idPhoto)
         {
-            return new Photo();
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idUtilisateur", idPhoto)
+            };
+
+            return procedure.Execute<Photo>(ListProcedure.RecupererPhoto, sqlParam);
         }
 
         /// <summary>
@@ -91,6 +101,17 @@ namespace WcfServicesToujoursDebout
         /// <returns>Retour le résultat de la requete</returns>
         internal static bool InsererPhoto(Photo photo)
         {
+            Procedure procedure = new Procedure();
+
+            //user.IdPhoto = user.IdPhoto != 0 ? user.IdPhoto : null; 
+
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@Nom", photo.IdUserCreation)
+            };
+
+            procedure.Execute<Photo>(ListProcedure.InsererPhoto, sqlParam);
+
             return true;
         }
 
@@ -101,6 +122,13 @@ namespace WcfServicesToujoursDebout
         /// <returns>Retour le résultat de la requete</returns>
         internal static bool ModifierPhoto(Photo photo)
         {
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@Id", photo.Id),
+            };
+
+            procedure.Execute<Photo>(ListProcedure.ModifierPhoto, sqlParam);
             return true;
         }
 
@@ -111,12 +139,32 @@ namespace WcfServicesToujoursDebout
         /// <returns>Retour le résultat de la requete</returns>
         internal static bool SupprimerPhoto(int idPhoto)
         {
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idUtilisateur", idPhoto),
+            };
+
+            procedure.Execute<Utilisateur>(ListProcedure.SupprimerPhoto, sqlParam);
+
             return true;
         }
 
         Photo IEntite<Photo>.Remplire(SqlDataReader data)
         {
-            throw new NotImplementedException();
+            data.Read();
+            IDataRecord record = data;
+            Photo photo = new Photo();
+
+            photo.Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"];
+            photo.IdUserCreation = string.IsNullOrEmpty(Convert.ToString(record["User_Creation"])) ? -1 : (int)record["User_Creation"];
+            photo.UserCreation_Libelle = string.Empty;
+            photo.DateCreation = (DateTime)record["Date_Creation"];
+            photo.IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"];
+            photo.UserModification_Libelle = string.Empty;
+            photo.DateModification = (DateTime)record["Date_Modification"];
+
+            return photo;
         }
 
 

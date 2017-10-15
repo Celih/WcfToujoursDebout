@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using WcfServicesToujoursDebout.Constante;
+using WcfServicesToujoursDebout.Utilitaire;
 
 namespace WcfServicesToujoursDebout
 {
@@ -16,7 +19,7 @@ namespace WcfServicesToujoursDebout
             Id = 0;
             Titre = string.Empty;
             Adresse = string.Empty;
-            DateFmtDateTime = new DateTime();
+            Date = new DateTime();
             Description = string.Empty;
             IdUserCreation = 0;
             UserCreation_Libelle = string.Empty;
@@ -46,41 +49,7 @@ namespace WcfServicesToujoursDebout
         /// <summary>
         /// Date de l'évenement (Format DateTime).
         /// </summary>
-        public DateTime DateFmtDateTime { get; set; }
-
-        /// <summary>
-        /// Date de l'évenement (Format String).
-        /// </summary>
-        public string Date
-        {
-            get
-            {
-                if (DateFmtDateTime != DateTime.MinValue)
-                {
-                    return DateFmtDateTime.Date.ToString();
-                }
-                return string.Empty;
-            }
-            set
-            { }
-        }
-
-        /// <summary>
-        /// Heure de l'évenement (Format String).
-        /// </summary>
-        public string Heure
-        {
-            get
-            {
-                if (DateFmtDateTime != DateTime.MinValue)
-                {
-                    return DateFmtDateTime.TimeOfDay.ToString();
-                }
-                return string.Empty;
-            }
-            set
-            { }
-        }
+        public DateTime Date { get; set; }
 
         /// <summary>
         /// Description de l'évenement.
@@ -127,7 +96,13 @@ namespace WcfServicesToujoursDebout
         /// <returns>Données de l'Evenement</returns>
         internal static Evenement RecupererEvenement(int idEvenement)
         {
-            return new Evenement();
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idEvenement", idEvenement)
+            };
+
+            return procedure.Execute<Evenement>(ListProcedure.RecupererEvenement, sqlParam);
         }
 
         /// <summary>
@@ -137,6 +112,17 @@ namespace WcfServicesToujoursDebout
         /// <returns>Retour le résultat de la requete</returns>
         internal static bool InsererEvenement(Evenement evenement)
         {
+            Procedure procedure = new Procedure();
+
+            //user.IdPhoto = user.IdPhoto != 0 ? user.IdPhoto : null; 
+
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@Nom", evenement.Titre)
+            };
+
+            procedure.Execute<Evenement>(ListProcedure.InsererEvenement, sqlParam);
+
             return true;
         }
 
@@ -147,6 +133,13 @@ namespace WcfServicesToujoursDebout
         /// <returns>Retour le résultat de la requete</returns>
         internal static bool ModifierEvenement(Evenement evenement)
         {
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@Id", evenement.Id),
+            };
+            
+            procedure.Execute<Evenement>(ListProcedure.ModifierEvenement, sqlParam);
             return true;
         }
 
@@ -157,12 +150,37 @@ namespace WcfServicesToujoursDebout
         /// <returns>Retour le résultat de la requete</returns>
         internal static bool SupprimerEvenement(int idEvenement)
         {
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idUtilisateur", idEvenement),
+            };
+
+            procedure.Execute<Utilisateur>(ListProcedure.SupprimerEvenement, sqlParam);
+
             return true;
         }
 
         Evenement IEntite<Evenement>.Remplire(SqlDataReader data)
         {
-            throw new NotImplementedException();
+            data.Read();
+            IDataRecord record = data;
+            Evenement evenement = new Evenement
+            {
+                Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"],
+                Titre = (string)record["Titre"],
+                Adresse = (string)record["Adresse"],
+                Date = (DateTime)record["Date_Creation"],
+                Description = (string)record["Adresse"],
+                IdUserCreation = string.IsNullOrEmpty(Convert.ToString(record["User_Creation"])) ? -1 : (int)record["User_Creation"],
+                UserCreation_Libelle = string.Empty,
+                DateCreation = (DateTime)record["Date_Creation"],
+                IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"],
+                UserModification_Libelle = string.Empty,
+                DateModification = (DateTime)record["Date_Modification"]
+            };
+
+            return evenement;
         }
 
 

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using WcfServicesToujoursDebout.Constante;
+using WcfServicesToujoursDebout.Utilitaire;
 
 namespace WcfServicesToujoursDebout
 {
@@ -75,7 +78,13 @@ namespace WcfServicesToujoursDebout
         /// <returns>Données du MotCle</returns>
         internal static MotCle RecupererMotCle(int idMotCle)
         {
-            return new MotCle();
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idMotCle", idMotCle)
+            };
+
+            return procedure.Execute<MotCle>(ListProcedure.RecupererMotCle, sqlParam);
         }
 
         /// <summary>
@@ -85,6 +94,17 @@ namespace WcfServicesToujoursDebout
         /// <returns>Retour le résultat de la requete</returns>
         internal static bool InsererMotCle(MotCle motCle)
         {
+            Procedure procedure = new Procedure();
+
+            //user.IdPhoto = user.IdPhoto != 0 ? user.IdPhoto : null; 
+
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@Nom", motCle.Libelle)
+            };
+
+            procedure.Execute<MotCle>(ListProcedure.InsererMotCle, sqlParam);
+
             return true;
         }
 
@@ -95,6 +115,13 @@ namespace WcfServicesToujoursDebout
         /// <returns>Retour le résultat de la requete</returns>
         internal static bool ModifierMotCle(MotCle motCle)
         {
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@Id", motCle.Id),
+            };
+            
+            procedure.Execute<MotCle>(ListProcedure.ModifierMotCle, sqlParam);
             return true;
         }
 
@@ -105,12 +132,33 @@ namespace WcfServicesToujoursDebout
         /// <returns>Retour le résultat de la requete</returns>
         internal static bool SupprimerMotCle(int idMotCle)
         {
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idUtilisateur", idMotCle),
+            };
+
+            procedure.Execute<Utilisateur>(ListProcedure.SupprimerMotCle, sqlParam);
+
             return true;
         }
 
         MotCle IEntite<MotCle>.Remplire(SqlDataReader data)
         {
-            throw new NotImplementedException();
+            data.Read();
+            IDataRecord record = data;
+            MotCle motcle = new MotCle();
+
+            motcle.Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"];
+            motcle.Libelle = (string)record["Libelle"];
+            motcle.IdUserCreation = string.IsNullOrEmpty(Convert.ToString(record["User_Creation"])) ? -1 : (int)record["User_Creation"];
+            motcle.UserCreation_Libelle = string.Empty;
+            motcle.DateCreation = (DateTime)record["Date_Creation"];
+            motcle.IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"];
+            motcle.UserModification_Libelle = string.Empty;
+            motcle.DateModification = (DateTime)record["Date_Modification"];
+
+            return motcle;
         }
 
 

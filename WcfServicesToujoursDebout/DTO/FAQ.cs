@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using WcfServicesToujoursDebout.Constante;
+using WcfServicesToujoursDebout.Utilitaire;
 
 namespace WcfServicesToujoursDebout
 {
@@ -81,7 +84,13 @@ namespace WcfServicesToujoursDebout
         /// <returns>Données de la FAQ</returns>
         internal static FAQ RecupererFAQ(int idFAQ)
         {
-            return new FAQ();
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idFAQ", idFAQ)
+            };
+
+            return procedure.Execute<FAQ>(ListProcedure.RecupererFAQ, sqlParam);
         }
 
         /// <summary>
@@ -91,6 +100,17 @@ namespace WcfServicesToujoursDebout
         /// <returns>Retour le résultat de la requete</returns>
         internal static bool InsererFAQ(FAQ faq)
         {
+            Procedure procedure = new Procedure();
+
+            //user.IdPhoto = user.IdPhoto != 0 ? user.IdPhoto : null; 
+
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@Nom", faq.Texte)
+            };
+
+            procedure.Execute<FAQ>(ListProcedure.InsererFAQ, sqlParam);
+
             return true;
         }
 
@@ -101,6 +121,14 @@ namespace WcfServicesToujoursDebout
         /// <returns>Retour le résultat de la requete</returns>
         internal static bool ModifierFAQ(FAQ faq)
         {
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@Id", faq.Id),
+            };
+
+            procedure.Execute<FAQ>(ListProcedure.ModifierFAQ, sqlParam);
+
             return true;
         }
 
@@ -111,12 +139,34 @@ namespace WcfServicesToujoursDebout
         /// <returns>Retour le résultat de la requete</returns>
         internal static bool SupprimerFAQ(int idFAQ)
         {
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idUtilisateur", idFAQ),
+            };
+
+            procedure.Execute<Utilisateur>(ListProcedure.SupprimerFAQ, sqlParam);
+
             return true;
         }
 
         FAQ IEntite<FAQ>.Remplire(SqlDataReader data)
         {
-            throw new NotImplementedException();
+            data.Read();
+            IDataRecord record = data;
+            FAQ faq = new FAQ();
+
+            faq.Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"];
+            faq.Titre = (string)record["Titre"];
+            faq.Texte = (string)record["Texte"];
+            faq.IdUserCreation = string.IsNullOrEmpty(Convert.ToString(record["User_Creation"])) ? -1 : (int)record["User_Creation"];
+            faq.UserCreation_Libelle = string.Empty;
+            faq.DateCreation = (DateTime)record["Date_Creation"];
+            faq.IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"];
+            faq.UserModification_Libelle = string.Empty;
+            faq.DateModification = (DateTime)record["Date_Modification"];
+
+            return faq;
         }
 
 

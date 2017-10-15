@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using WcfServicesToujoursDebout.Constante;
+using WcfServicesToujoursDebout.Utilitaire;
 
 namespace WcfServicesToujoursDebout
 {
@@ -75,7 +78,13 @@ namespace WcfServicesToujoursDebout
         /// <returns>Données de l'Tag</returns>
         internal static Tag RecupererTag(int idTag)
         {
-            return new Tag();
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idUtilisateur", idTag)
+            };
+
+            return procedure.Execute<Tag>(ListProcedure.RecupererTag, sqlParam);
         }
 
         /// <summary>
@@ -85,6 +94,17 @@ namespace WcfServicesToujoursDebout
         /// <returns>Retour le résultat de la requete</returns>
         internal static bool InsererTag(Tag tag)
         {
+            Procedure procedure = new Procedure();
+
+            //user.IdPhoto = user.IdPhoto != 0 ? user.IdPhoto : null; 
+
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@Nom", tag.Libelle)
+            };
+
+            procedure.Execute<Utilisateur>(ListProcedure.InsererTag, sqlParam);
+
             return true;
         }
 
@@ -95,6 +115,14 @@ namespace WcfServicesToujoursDebout
         /// <returns>Retour le résultat de la requete</returns>
         internal static bool ModifierTag(Tag tag)
         {
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@Id", tag.Id),
+            };
+
+            procedure.Execute<Tag>(ListProcedure.ModifierTag, sqlParam);
+
             return true;
         }
 
@@ -105,12 +133,33 @@ namespace WcfServicesToujoursDebout
         /// <returns>Retour le résultat de la requete</returns>
         internal static bool SupprimerTag(int idTag)
         {
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idUtilisateur", idTag),
+            };
+
+            procedure.Execute<Utilisateur>(ListProcedure.SupprimerTag, sqlParam);
+
             return true;
         }
 
         Tag IEntite<Tag>.Remplire(SqlDataReader data)
         {
-            throw new NotImplementedException();
+            data.Read();
+            IDataRecord record = data;
+            Tag tag = new Tag();
+
+            tag.Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"];
+            tag.Libelle = (string)record["Libelle"];
+            tag.IdUserCreation = string.IsNullOrEmpty(Convert.ToString(record["User_Creation"])) ? -1 : (int)record["User_Creation"];
+            tag.UserCreation_Libelle = string.Empty;
+            tag.DateCreation = (DateTime)record["Date_Creation"];
+            tag.IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"];
+            tag.UserModification_Libelle = string.Empty;
+            tag.DateModification = (DateTime)record["Date_Modification"];
+
+            return tag;
         }
 
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
+using WcfServicesToujoursDebout.DTO;
 using static WcfServicesToujoursDebout.ToujoursDebout;
 
 namespace WcfServicesToujoursDebout
@@ -142,6 +143,22 @@ namespace WcfServicesToujoursDebout
         bool DeleteNews(int idNews);
 
         #endregion
-        
+
+        #region Services Commentaire
+
+        [OperationContract]
+        Commentaire GetCommentaire(int idCommentaire);
+
+        [OperationContract]
+        bool InsertCommentaire(Commentaire Commentaire);
+
+        [OperationContract]
+        bool UpdateCommentaire(Commentaire Commentaire);
+
+        [OperationContract]
+        bool DeleteCommentaire(int idCommentaire);
+
+        #endregion
+
     }
 }

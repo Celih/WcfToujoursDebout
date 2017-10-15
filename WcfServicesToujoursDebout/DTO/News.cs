@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using WcfServicesToujoursDebout.Constante;
+using WcfServicesToujoursDebout.Utilitaire;
 
 namespace WcfServicesToujoursDebout
 {
@@ -81,7 +84,13 @@ namespace WcfServicesToujoursDebout
         /// <returns>Données de la News</returns>
         internal static News RecupererNews(int idNews)
         {
-            return new News();
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idUtilisateur", idNews)
+            };
+
+            return procedure.Execute<News>(ListProcedure.RecupererNews, sqlParam);
         }
 
         /// <summary>
@@ -91,6 +100,17 @@ namespace WcfServicesToujoursDebout
         /// <returns>Retour le résultat de la requete</returns>
         internal static bool InsererNews(News news)
         {
+
+            Procedure procedure = new Procedure();
+
+            //user.IdPhoto = user.IdPhoto != 0 ? user.IdPhoto : null; 
+
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@Nom", news.Texte)
+            };
+
+            procedure.Execute<News>(ListProcedure.InsererNews, sqlParam);
             return true;
         }
 
@@ -101,6 +121,14 @@ namespace WcfServicesToujoursDebout
         /// <returns>Retour le résultat de la requete</returns>
         internal static bool ModifierNews(News news)
         {
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@Id", news.Id),
+            };
+
+            procedure.Execute<News>(ListProcedure.ModifierNews, sqlParam);
+
             return true;
         }
 
@@ -111,12 +139,34 @@ namespace WcfServicesToujoursDebout
         /// <returns>Retour le résultat de la requete</returns>
         internal static bool SupprimerNews(int idNews)
         {
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idUtilisateur", idNews),
+            };
+
+            procedure.Execute<Utilisateur>(ListProcedure.SupprimerNews, sqlParam);
+
             return true;
         }
 
         News IEntite<News>.Remplire(SqlDataReader data)
         {
-            throw new NotImplementedException();
+            data.Read();
+            IDataRecord record = data;
+            News news = new News();
+
+            news.Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"];
+            news.Titre = (string)record["Titre"];
+            news.Texte = (string)record["Texte"];
+            news.IdUserCreation = string.IsNullOrEmpty(Convert.ToString(record["User_Creation"])) ? -1 : (int)record["User_Creation"];
+            news.UserCreation_Libelle = string.Empty;
+            news.DateCreation = (DateTime)record["Date_Creation"];
+            news.IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"];
+            news.UserModification_Libelle = string.Empty;
+            news.DateModification = (DateTime)record["Date_Modification"];
+
+            return news;
         }
 
 

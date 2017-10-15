@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using WcfServicesToujoursDebout.Constante;
+using WcfServicesToujoursDebout.Utilitaire;
 
 namespace WcfServicesToujoursDebout
 {
@@ -87,7 +90,13 @@ namespace WcfServicesToujoursDebout
         /// <returns>Données de la Publication</returns>
         internal static Publication RecupererPublication(int idPublication)
         {
-            return new Publication();
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idUtilisateur", idPublication)
+            };
+
+            return procedure.Execute<Publication>(ListProcedure.RecupererPublication, sqlParam);
         }
 
         /// <summary>
@@ -97,6 +106,17 @@ namespace WcfServicesToujoursDebout
         /// <returns>Retour le résultat de la requete</returns>
         internal static bool InsererPublication(Publication publication)
         {
+            Procedure procedure = new Procedure();
+
+            //user.IdPhoto = user.IdPhoto != 0 ? user.IdPhoto : null; 
+
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@Nom", publication.Texte)
+            };
+
+            procedure.Execute<Publication>(ListProcedure.InsererPublication, sqlParam);
+
             return true;
         }
 
@@ -107,6 +127,14 @@ namespace WcfServicesToujoursDebout
         /// <returns>Retour le résultat de la requete</returns>
         internal static bool ModifierPublication(Publication publication)
         {
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@Id", publication.Id),
+            };
+
+            procedure.Execute<Publication>(ListProcedure.ModifierPublication, sqlParam);
+
             return true;
         }
 
@@ -117,12 +145,33 @@ namespace WcfServicesToujoursDebout
         /// <returns>Retour le résultat de la requete</returns>
         internal static bool SupprimerPublication(int idPublication)
         {
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idUtilisateur", idPublication),
+            };
+
+            procedure.Execute<Utilisateur>(ListProcedure.SupprimerPublication, sqlParam);
             return true;
         }
 
         Publication IEntite<Publication>.Remplire(SqlDataReader data)
         {
-            throw new NotImplementedException();
+            data.Read();
+            IDataRecord record = data;
+            Publication publication = new Publication();
+
+            publication.Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"];
+            publication.IdEvenement = string.IsNullOrEmpty(Convert.ToString(record["IdEvenement"])) ? -1 : (int)record["IdEvenement"];
+            publication.Texte = (string)record["Texte"];
+            publication.IdUserCreation = string.IsNullOrEmpty(Convert.ToString(record["User_Creation"])) ? -1 : (int)record["User_Creation"];
+            publication.UserCreation_Libelle = string.Empty;
+            publication.DateCreation = (DateTime)record["Date_Creation"];
+            publication.IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"];
+            publication.UserModification_Libelle = string.Empty;
+            publication.DateModification = (DateTime)record["Date_Modification"];
+
+            return publication;
         }
 
 

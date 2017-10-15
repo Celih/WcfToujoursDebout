@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using WcfServicesToujoursDebout.Classe;
+using WcfServicesToujoursDebout.Constante;
+using WcfServicesToujoursDebout.Utilitaire;
 
 namespace WcfServicesToujoursDebout.DTO
 {
@@ -88,7 +91,13 @@ namespace WcfServicesToujoursDebout.DTO
         /// <returns>Données du Commentaire</returns>
         internal static Commentaire RecupererCommentaire(int idCommentaire)
         {
-            return new Commentaire();
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idUtilisateur", idCommentaire)
+            };
+
+            return procedure.Execute<Commentaire>(ListProcedure.RecupererCommentaire, sqlParam);
         }
 
         /// <summary>
@@ -98,6 +107,17 @@ namespace WcfServicesToujoursDebout.DTO
         /// <returns>Retour le résultat de la requete</returns>
         internal static bool InsererCommentaire(Commentaire commentaire)
         {
+            Procedure procedure = new Procedure();
+
+            //user.IdPhoto = user.IdPhoto != 0 ? user.IdPhoto : null; 
+
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@Nom", commentaire.IdPere)
+            };
+
+            procedure.Execute<Commentaire>(ListProcedure.InsererCommentaire, sqlParam);
+
             return true;
         }
 
@@ -108,6 +128,14 @@ namespace WcfServicesToujoursDebout.DTO
         /// <returns>Retour le résultat de la requete</returns>
         internal static bool ModifierCommentaire(Commentaire commentaire)
         {
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@Id", commentaire.Id),
+            };
+
+            procedure.Execute<Commentaire>(ListProcedure.ModifierCommentaire, sqlParam);
+
             return true;
         }
 
@@ -118,12 +146,36 @@ namespace WcfServicesToujoursDebout.DTO
         /// <returns>Retour le résultat de la requete</returns>
         internal static bool SupprimerCommentaire(int idCommentaire)
         {
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idUtilisateur", idCommentaire),
+            };
+
+            procedure.Execute<Utilisateur>(ListProcedure.SupprimerCommentaire, sqlParam);
+            
             return true;
         }
 
         Commentaire IEntite<Commentaire>.Remplire(SqlDataReader data)
         {
-            throw new NotImplementedException();
+            data.Read();
+            IDataRecord record = data;
+            Commentaire commentaire = new Commentaire();
+
+            commentaire.Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"];
+            commentaire.Texte = (string)record["Texte"];
+            commentaire.IdPere = string.IsNullOrEmpty(Convert.ToString(record["IdPere"])) ? -1 : (int)record["IdPere"];
+            commentaire.TypeCommentaire = (TypeCommentaire)record["TypeCommentaire"];
+            commentaire.IdUserCreation = string.IsNullOrEmpty(Convert.ToString(record["User_Creation"])) ? -1 : (int)record["User_Creation"];
+            commentaire.UserCreation_Libelle = string.Empty;
+            commentaire.DateCreation = (DateTime)record["Date_Creation"];
+            commentaire.IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"];
+            commentaire.UserModification_Libelle = string.Empty;
+            commentaire.DateModification = (DateTime)record["Date_Modification"];
+
+
+            return commentaire;
         }
 
 

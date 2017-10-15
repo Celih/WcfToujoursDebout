@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
+using WcfServicesToujoursDebout.DTO;
 
 namespace WcfServicesToujoursDebout
 {
@@ -208,7 +209,31 @@ namespace WcfServicesToujoursDebout
 
         #endregion
 
-        
+        #region Services Commentaire
+
+        public Commentaire GetCommentaire(int idCommentaire)
+        {
+            return Commentaire.RecupererCommentaire(idCommentaire);
+        }
+
+        public bool InsertCommentaire(Commentaire Commentaire)
+        {
+            return Commentaire.InsererCommentaire(Commentaire);
+        }
+
+        public bool UpdateCommentaire(Commentaire Commentaire)
+        {
+            return Commentaire.ModifierCommentaire(Commentaire);
+        }
+
+        public bool DeleteCommentaire(int idCommentaire)
+        {
+            return Commentaire.SupprimerCommentaire(idCommentaire);
+        }
+
+        #endregion
+
+
     }
 
 

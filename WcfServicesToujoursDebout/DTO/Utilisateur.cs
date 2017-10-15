@@ -76,7 +76,7 @@ namespace WcfServicesToujoursDebout
         /// <summary>
         /// Id de la photo.
         /// </summary>
-        public int IdPhoto { get; set; }
+        public int? IdPhoto { get; set; }
 
         /// <summary>
         /// Id du User de creation.
@@ -134,6 +134,9 @@ namespace WcfServicesToujoursDebout
         internal static bool InsererUtilisateur(Utilisateur user)
         {
             Procedure procedure = new Procedure();
+
+            //user.IdPhoto = user.IdPhoto != 0 ? user.IdPhoto : null; 
+
             List<SqlParameter> sqlParam = new List<SqlParameter>
             {
                 new SqlParameter("@Nom", user.Nom),
@@ -179,6 +182,14 @@ namespace WcfServicesToujoursDebout
         /// <returns>Retour le résultat de la requete</returns>
         internal static bool SupprimerUtilisateur(int idUtilisateur)
         {
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idUtilisateur", idUtilisateur),
+            };
+
+            procedure.Execute<Utilisateur>(ListProcedure.SupprimerUtilisateur, sqlParam);
+
             return true;
         }
 
@@ -186,20 +197,21 @@ namespace WcfServicesToujoursDebout
         {
             data.Read();
             IDataRecord record = data;
-            Utilisateur user = new Utilisateur();
-
-            user.Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"];
-            user.Nom = (string)record["Nom"];
-            user.Prenom = (string)record["Prenom"];
-            user.AdresseMail = (string)record["AdresseMail"];
-            user.Pseudo = (string)record["Pseudo"];
-            user.IdPhoto = string.IsNullOrEmpty(Convert.ToString(record["IdPhoto"])) ? -1 : (int)record["IdPhoto"];
-            user.IdUserCreation = (int)record["User_Creation"];
-            user.UserCreation_Libelle = string.Empty;
-            user.DateCreation = (DateTime)record["Date_Creation"];
-            user.IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["IdPhoto"])) ? -1 : (int)record["User_Modification"];
-            user.UserModification_Libelle = string.Empty;
-            user.DateModification = (DateTime)record["Date_Modification"];
+            Utilisateur user = new Utilisateur
+            {
+                Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"],
+                Nom = (string)record["Nom"],
+                Prenom = (string)record["Prenom"],
+                AdresseMail = (string)record["AdresseMail"],
+                Pseudo = (string)record["Pseudo"],
+                IdPhoto = string.IsNullOrEmpty(Convert.ToString(record["IdPhoto"])) ? -1 : (int)record["IdPhoto"],
+                IdUserCreation = string.IsNullOrEmpty(Convert.ToString(record["User_Creation"])) ? -1 : (int)record["User_Creation"],
+                UserCreation_Libelle = string.Empty,
+                DateCreation = (DateTime)record["Date_Creation"],
+                IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"],
+                UserModification_Libelle = string.Empty,
+                DateModification = (DateTime)record["Date_Modification"]
+            };
 
             return user;
         }
