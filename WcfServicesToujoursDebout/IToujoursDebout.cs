@@ -54,6 +54,9 @@ namespace WcfServicesToujoursDebout
         FAQ GetFAQ(int idFAQ);
 
         [OperationContract]
+        List<FAQ> GetListFAQ(int idFAQ);
+
+        [OperationContract]
         bool InsertFAQ(FAQ faq);
 
         [OperationContract]
@@ -116,6 +119,9 @@ namespace WcfServicesToujoursDebout
 
         [OperationContract]
         Tag GetTag(int idTag);
+
+        [OperationContract]
+        List<Tag> GetListTag(int idUtilisateur);
 
         [OperationContract]
         bool InsertTag(Tag tag);

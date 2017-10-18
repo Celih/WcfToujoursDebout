@@ -105,6 +105,19 @@ namespace WcfServicesToujoursDebout
             return procedure.Execute<Evenement>(ListProcedure.RecupererEvenement, sqlParam);
         }
 
+        internal static List<Evenement> RecupererListEvenement(int idUtilisateur)
+        {
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idUtilisateur", idUtilisateur)
+            };
+
+            procedure.Execute<Evenement>(ListProcedure.RecupererListeEvenement, sqlParam);
+
+            return new List<Evenement>();
+        }
+        
         /// <summary>
         /// Inserer un Evenement.
         /// </summary>

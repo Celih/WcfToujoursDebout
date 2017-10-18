@@ -87,6 +87,11 @@ namespace WcfServicesToujoursDebout
             return procedure.Execute<Tag>(ListProcedure.RecupererTag, sqlParam);
         }
 
+        internal static List<Tag> RecupererNewTag(int idUtilisateur)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Inserer un Tag.
         /// </summary>
@@ -162,6 +167,8 @@ namespace WcfServicesToujoursDebout
 
             return tag;
         }
+
+        
 
 
 
