@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using WcfServicesToujoursDebout.Constante;
+using WcfServicesToujoursDebout.DTO;
 using WcfServicesToujoursDebout.Utilitaire;
 
 namespace WcfServicesToujoursDebout
@@ -123,7 +124,62 @@ namespace WcfServicesToujoursDebout
                 new SqlParameter("@idUtilisateur", idUtilisateur)
             };
 
-            return procedure.Execute<Utilisateur>(ListProcedure.RecupererUtilisateur, sqlParam);
+            return procedure.Execute<Utilisateur>(ListProcedure.RecupererUtilisateur, sqlParam)[0];
+        }
+
+        internal static List<Evenement> GetListEvenement (int idUtilisateur)
+        {
+            List<Evenement> listEvenement = new List<Evenement>();
+
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idUtilisateur", idUtilisateur)
+            };
+
+            List<Particite> listParticipe = new List<Particite>();
+            listParticipe = procedure.Execute<Particite>(ListProcedure.RecupererListeEvenement, sqlParam);
+
+            for (int i = 0; i < listParticipe.Count; i++)
+            {
+                procedure = new Procedure();
+                sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idEvenement", listParticipe[i].IdEvenement)
+            };
+
+                listEvenement.Add(procedure.Execute<Evenement>(ListProcedure.RecupererEvenement, sqlParam)[0]);
+                listEvenement[listEvenement.Count - 1].Statut = listParticipe[i].Statut;
+            }
+
+            return listEvenement;
+        }
+
+        internal static List<Tag> GetListTag(int idUtilisateur)
+        {
+            List<Tag> listTag = new List<Tag>();
+
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idUtilisateur", idUtilisateur)
+            };
+
+            List<EstAbonne> listEstAbonne = new List<EstAbonne>();
+            listEstAbonne = procedure.Execute<EstAbonne>(ListProcedure.RecupererListeTag, sqlParam);
+
+            for (int i = 0; i < listEstAbonne.Count; i++)
+            {
+                procedure = new Procedure();
+                sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idTag", listEstAbonne[i].IdTag)
+            };
+
+                listTag.Add(procedure.Execute<Tag>(ListProcedure.RecupererTag, sqlParam)[0]);
+            }
+
+            return listTag;
         }
 
         /// <summary>
@@ -193,27 +249,31 @@ namespace WcfServicesToujoursDebout
             return true;
         }
 
-        Utilisateur IEntite<Utilisateur>.Remplire(SqlDataReader data)
+        List<Utilisateur> IEntite<Utilisateur>.Remplire(SqlDataReader data)
         {
-            data.Read();
-            IDataRecord record = data;
-            Utilisateur user = new Utilisateur
+            List<Utilisateur> listUser = new List<Utilisateur>();
+            while (data.Read())
             {
-                Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"],
-                Nom = (string)record["Nom"],
-                Prenom = (string)record["Prenom"],
-                AdresseMail = (string)record["AdresseMail"],
-                Pseudo = (string)record["Pseudo"],
-                IdPhoto = string.IsNullOrEmpty(Convert.ToString(record["IdPhoto"])) ? -1 : (int)record["IdPhoto"],
-                IdUserCreation = string.IsNullOrEmpty(Convert.ToString(record["User_Creation"])) ? -1 : (int)record["User_Creation"],
-                UserCreation_Libelle = string.Empty,
-                DateCreation = (DateTime)record["Date_Creation"],
-                IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"],
-                UserModification_Libelle = string.Empty,
-                DateModification = (DateTime)record["Date_Modification"]
-            };
+                IDataRecord record = data;
+                Utilisateur user = new Utilisateur
+                {
+                    Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"],
+                    Nom = (string)record["Nom"],
+                    Prenom = (string)record["Prenom"],
+                    AdresseMail = (string)record["AdresseMail"],
+                    Pseudo = (string)record["Pseudo"],
+                    IdPhoto = string.IsNullOrEmpty(Convert.ToString(record["IdPhoto"])) ? -1 : (int)record["IdPhoto"],
+                    IdUserCreation = string.IsNullOrEmpty(Convert.ToString(record["User_Creation"])) ? -1 : (int)record["User_Creation"],
+                    UserCreation_Libelle = string.Empty,
+                    DateCreation = (DateTime)record["Date_Creation"],
+                    IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"],
+                    UserModification_Libelle = string.Empty,
+                    DateModification = (DateTime)record["Date_Modification"]
+                };
+                listUser.Add(user);
+            }
 
-            return user;
+            return listUser;
         }
 
         #endregion

@@ -68,11 +68,13 @@
     <Compile Include="Constante\ListProcedure.cs" />
     <Compile Include="Constante\TypeCommentaire.cs" />
     <Compile Include="DTO\Commentaire.cs" />
+    <Compile Include="DTO\EstAbonne.cs" />
     <Compile Include="DTO\Evenement.cs" />
     <Compile Include="DTO\FAQ.cs" />
     <Compile Include="DTO\Interface\IEntite.cs" />
     <Compile Include="DTO\MotCle.cs" />
     <Compile Include="DTO\News.cs" />
+    <Compile Include="DTO\Particite.cs" />
     <Compile Include="DTO\Photo.cs" />
     <Compile Include="DTO\Publication.cs" />
     <Compile Include="DTO\Tag.cs" />

@@ -90,7 +90,7 @@ namespace WcfServicesToujoursDebout
                 new SqlParameter("@idFAQ", idFAQ)
             };
 
-            return procedure.Execute<FAQ>(ListProcedure.RecupererFAQ, sqlParam);
+            return procedure.Execute<FAQ>(ListProcedure.RecupererFAQ, sqlParam)[0];
         }
 
         /// <summary>
@@ -153,23 +153,28 @@ namespace WcfServicesToujoursDebout
             return true;
         }
 
-        FAQ IEntite<FAQ>.Remplire(SqlDataReader data)
+        List<FAQ> IEntite<FAQ>.Remplire(SqlDataReader data)
         {
-            data.Read();
-            IDataRecord record = data;
-            FAQ faq = new FAQ();
+            List<FAQ> listFaq = new List<FAQ>();
+            while (data.Read())
+            {
+                IDataRecord record = data;
+                FAQ faq = new FAQ
+                {
+                    Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"],
+                    Titre = (string)record["Titre"],
+                    Texte = (string)record["Texte"],
+                    IdUserCreation = string.IsNullOrEmpty(Convert.ToString(record["User_Creation"])) ? -1 : (int)record["User_Creation"],
+                    UserCreation_Libelle = string.Empty,
+                    DateCreation = (DateTime)record["Date_Creation"],
+                    IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"],
+                    UserModification_Libelle = string.Empty,
+                    DateModification = (DateTime)record["Date_Modification"]
+                };
+                listFaq.Add(faq);
+            }
 
-            faq.Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"];
-            faq.Titre = (string)record["Titre"];
-            faq.Texte = (string)record["Texte"];
-            faq.IdUserCreation = string.IsNullOrEmpty(Convert.ToString(record["User_Creation"])) ? -1 : (int)record["User_Creation"];
-            faq.UserCreation_Libelle = string.Empty;
-            faq.DateCreation = (DateTime)record["Date_Creation"];
-            faq.IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"];
-            faq.UserModification_Libelle = string.Empty;
-            faq.DateModification = (DateTime)record["Date_Modification"];
-
-            return faq;
+            return listFaq;
         }
 
 

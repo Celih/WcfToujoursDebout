@@ -38,7 +38,7 @@ namespace WcfServicesToujoursDebout
         /// Titre de la news.
         /// </summary>
         public string Titre { get; set; }
-        
+
         /// <summary>
         /// Texte de la news.
         /// </summary>
@@ -90,7 +90,7 @@ namespace WcfServicesToujoursDebout
                 new SqlParameter("@idUtilisateur", idNews)
             };
 
-            return procedure.Execute<News>(ListProcedure.RecupererNews, sqlParam);
+            return procedure.Execute<News>(ListProcedure.RecupererNews, sqlParam)[0];
         }
 
         /// <summary>
@@ -153,23 +153,28 @@ namespace WcfServicesToujoursDebout
             return true;
         }
 
-        News IEntite<News>.Remplire(SqlDataReader data)
+        List<News> IEntite<News>.Remplire(SqlDataReader data)
         {
-            data.Read();
-            IDataRecord record = data;
-            News news = new News();
+            List<News> listNews = new List<News>();
+            while (data.Read())
+            {
+                IDataRecord record = data;
+                News news = new News
+                {
+                    Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"],
+                    Titre = (string)record["Titre"],
+                    Texte = (string)record["Texte"],
+                    IdUserCreation = string.IsNullOrEmpty(Convert.ToString(record["User_Creation"])) ? -1 : (int)record["User_Creation"],
+                    UserCreation_Libelle = string.Empty,
+                    DateCreation = (DateTime)record["Date_Creation"],
+                    IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"],
+                    UserModification_Libelle = string.Empty,
+                    DateModification = (DateTime)record["Date_Modification"]
+                };
+                listNews.Add(news);
+            }
 
-            news.Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"];
-            news.Titre = (string)record["Titre"];
-            news.Texte = (string)record["Texte"];
-            news.IdUserCreation = string.IsNullOrEmpty(Convert.ToString(record["User_Creation"])) ? -1 : (int)record["User_Creation"];
-            news.UserCreation_Libelle = string.Empty;
-            news.DateCreation = (DateTime)record["Date_Creation"];
-            news.IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"];
-            news.UserModification_Libelle = string.Empty;
-            news.DateModification = (DateTime)record["Date_Modification"];
-
-            return news;
+            return listNews;
         }
 
 

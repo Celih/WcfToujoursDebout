@@ -38,7 +38,7 @@ namespace WcfServicesToujoursDebout
         /// Image.
         /// </summary>
         //public Image Image { get; set; }
-        
+
         /// <summary>
         /// Description de la photo.
         /// </summary>
@@ -91,7 +91,7 @@ namespace WcfServicesToujoursDebout
                 new SqlParameter("@idUtilisateur", idPhoto)
             };
 
-            return procedure.Execute<Photo>(ListProcedure.RecupererPhoto, sqlParam);
+            return procedure.Execute<Photo>(ListProcedure.RecupererPhoto, sqlParam)[0];
         }
 
         /// <summary>
@@ -150,21 +150,26 @@ namespace WcfServicesToujoursDebout
             return true;
         }
 
-        Photo IEntite<Photo>.Remplire(SqlDataReader data)
+        List<Photo> IEntite<Photo>.Remplire(SqlDataReader data)
         {
-            data.Read();
-            IDataRecord record = data;
-            Photo photo = new Photo();
+            List<Photo> listPhoto = new List<Photo>();
+            while (data.Read())
+            {
+                IDataRecord record = data;
+                Photo photo = new Photo
+                {
+                    Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"],
+                    IdUserCreation = string.IsNullOrEmpty(Convert.ToString(record["User_Creation"])) ? -1 : (int)record["User_Creation"],
+                    UserCreation_Libelle = string.Empty,
+                    DateCreation = (DateTime)record["Date_Creation"],
+                    IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"],
+                    UserModification_Libelle = string.Empty,
+                    DateModification = (DateTime)record["Date_Modification"]
+                };
+                listPhoto.Add(photo);
+            }
 
-            photo.Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"];
-            photo.IdUserCreation = string.IsNullOrEmpty(Convert.ToString(record["User_Creation"])) ? -1 : (int)record["User_Creation"];
-            photo.UserCreation_Libelle = string.Empty;
-            photo.DateCreation = (DateTime)record["Date_Creation"];
-            photo.IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"];
-            photo.UserModification_Libelle = string.Empty;
-            photo.DateModification = (DateTime)record["Date_Modification"];
-
-            return photo;
+            return listPhoto;
         }
 
 

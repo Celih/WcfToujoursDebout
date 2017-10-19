@@ -97,7 +97,7 @@ namespace WcfServicesToujoursDebout.DTO
                 new SqlParameter("@idUtilisateur", idCommentaire)
             };
 
-            return procedure.Execute<Commentaire>(ListProcedure.RecupererCommentaire, sqlParam);
+            return procedure.Execute<Commentaire>(ListProcedure.RecupererCommentaire, sqlParam)[0];
         }
 
         /// <summary>
@@ -156,29 +156,33 @@ namespace WcfServicesToujoursDebout.DTO
             };
 
             procedure.Execute<Utilisateur>(ListProcedure.SupprimerCommentaire, sqlParam);
-            
+
             return true;
         }
 
-        Commentaire IEntite<Commentaire>.Remplire(SqlDataReader data)
+        List<Commentaire> IEntite<Commentaire>.Remplire(SqlDataReader data)
         {
-            data.Read();
-            IDataRecord record = data;
-            Commentaire commentaire = new Commentaire();
+            List<Commentaire> listCommentaire = new List<Commentaire>();
+            while (data.Read())
+            {
+                IDataRecord record = data;
+                Commentaire commentaire = new Commentaire
+                {
+                    Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"],
+                    Texte = (string)record["Texte"],
+                    IdPere = string.IsNullOrEmpty(Convert.ToString(record["IdPere"])) ? -1 : (int)record["IdPere"],
+                    TypeCommentaire = (TypeCommentaire)record["TypeCommentaire"],
+                    IdUserCreation = string.IsNullOrEmpty(Convert.ToString(record["User_Creation"])) ? -1 : (int)record["User_Creation"],
+                    UserCreation_Libelle = string.Empty,
+                    DateCreation = (DateTime)record["Date_Creation"],
+                    IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"],
+                    UserModification_Libelle = string.Empty,
+                    DateModification = (DateTime)record["Date_Modification"]
+                };
+                listCommentaire.Add(commentaire);
+            }
 
-            commentaire.Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"];
-            commentaire.Texte = (string)record["Texte"];
-            commentaire.IdPere = string.IsNullOrEmpty(Convert.ToString(record["IdPere"])) ? -1 : (int)record["IdPere"];
-            commentaire.TypeCommentaire = (TypeCommentaire)record["TypeCommentaire"];
-            commentaire.IdUserCreation = string.IsNullOrEmpty(Convert.ToString(record["User_Creation"])) ? -1 : (int)record["User_Creation"];
-            commentaire.UserCreation_Libelle = string.Empty;
-            commentaire.DateCreation = (DateTime)record["Date_Creation"];
-            commentaire.IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"];
-            commentaire.UserModification_Libelle = string.Empty;
-            commentaire.DateModification = (DateTime)record["Date_Modification"];
-
-
-            return commentaire;
+            return listCommentaire;
         }
 
 

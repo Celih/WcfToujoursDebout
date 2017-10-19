@@ -44,6 +44,11 @@ namespace WcfServicesToujoursDebout.Constante
         public const string RecupererListeEvenement = "ToujoursDebout.dbo.GetListEvenement";
 
         /// <summary>
+        /// Procedure : GetListEvenement
+        /// </summary>
+        public const string RecupererListeTag = "ToujoursDebout.dbo.GetListTag";
+        
+        /// <summary>
         /// Procedure : InsertEvenement
         /// </summary>
         public const string InsererEvenement = "ToujoursDebout.dbo.InsertEvenement";

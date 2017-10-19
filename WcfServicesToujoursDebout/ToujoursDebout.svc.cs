@@ -19,6 +19,16 @@ namespace WcfServicesToujoursDebout
             return Utilisateur.RecupererUtilisateur(idUtilisateur);
         }
 
+        public List<Evenement> GetListEvenement(int idUtilisateur)
+        {
+            return Utilisateur.GetListEvenement(idUtilisateur);
+        }
+
+        public List<Tag> GetListTag(int idUtilisateur)
+        {
+            return Utilisateur.GetListTag(idUtilisateur);
+        }
+
         public bool InsertUtilisateur(Utilisateur user)
         {
             return Utilisateur.InsererUtilisateur(user);
@@ -41,11 +51,6 @@ namespace WcfServicesToujoursDebout
         public Evenement GetEvenement(int idEvenemenet)
         {
             return Evenement.RecupererEvenement(idEvenemenet);
-        }
-
-        public List<Evenement> GetListEvenement(int idUtilisateur)
-        {
-            return Evenement.RecupererListEvenement(idUtilisateur);
         }
 
         public bool InsertEvenement(Evenement evenement)
@@ -171,11 +176,6 @@ namespace WcfServicesToujoursDebout
         public Tag GetTag(int idTag)
         {
             return Tag.RecupererTag(idTag);
-        }
-
-        public List<Tag> GetListTag(int idUtilisateur)
-        {
-            return Tag.RecupererNewTag(idUtilisateur);
         }
 
         public bool InsertTag(Tag tag)

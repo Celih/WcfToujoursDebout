@@ -22,9 +22,9 @@ namespace WcfServicesToujoursDebout.Utilitaire
         /// <param name="procedureNom">Nom de la requete</param>
         /// <param name="listParameterSql">Liste des parametres</param>
         /// <returns></returns>
-        public T Execute<T>(string procedureNom, List<SqlParameter> listParameterSql) where T : IEntite<T>, new()
+        public List<T> Execute<T>(string procedureNom, List<SqlParameter> listParameterSql) where T : IEntite<T>, new()
         {
-            T objet = new T();
+            List<T> objet = new List<T>();
 
             try
             {
@@ -44,7 +44,7 @@ namespace WcfServicesToujoursDebout.Utilitaire
                 SqlDataReader data = command.ExecuteReader();
                 if (data.HasRows)
                 {
-                    objet = objet.Remplire(data);
+                    objet.AddRange(new T().Remplire(data));
                 }
             }
             catch (SqlException e)

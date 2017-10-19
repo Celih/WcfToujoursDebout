@@ -96,7 +96,7 @@ namespace WcfServicesToujoursDebout
                 new SqlParameter("@idUtilisateur", idPublication)
             };
 
-            return procedure.Execute<Publication>(ListProcedure.RecupererPublication, sqlParam);
+            return procedure.Execute<Publication>(ListProcedure.RecupererPublication, sqlParam)[0];
         }
 
         /// <summary>
@@ -158,23 +158,29 @@ namespace WcfServicesToujoursDebout
             return true;
         }
 
-        Publication IEntite<Publication>.Remplire(SqlDataReader data)
+        List<Publication> IEntite<Publication>.Remplire(SqlDataReader data)
         {
-            data.Read();
-            IDataRecord record = data;
-            Publication publication = new Publication();
+            List<Publication> listPublication = new List<Publication>();
+            while (data.Read())
+            {
+                IDataRecord record = data;
 
-            publication.Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"];
-            publication.IdEvenement = string.IsNullOrEmpty(Convert.ToString(record["IdEvenement"])) ? -1 : (int)record["IdEvenement"];
-            publication.Texte = (string)record["Texte"];
-            publication.IdUserCreation = string.IsNullOrEmpty(Convert.ToString(record["User_Creation"])) ? -1 : (int)record["User_Creation"];
-            publication.UserCreation_Libelle = string.Empty;
-            publication.DateCreation = (DateTime)record["Date_Creation"];
-            publication.IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"];
-            publication.UserModification_Libelle = string.Empty;
-            publication.DateModification = (DateTime)record["Date_Modification"];
+                Publication publication = new Publication
+                {
+                    Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"],
+                    IdEvenement = string.IsNullOrEmpty(Convert.ToString(record["IdEvenement"])) ? -1 : (int)record["IdEvenement"],
+                    Texte = (string)record["Texte"],
+                    IdUserCreation = string.IsNullOrEmpty(Convert.ToString(record["User_Creation"])) ? -1 : (int)record["User_Creation"],
+                    UserCreation_Libelle = string.Empty,
+                    DateCreation = (DateTime)record["Date_Creation"],
+                    IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"],
+                    UserModification_Libelle = string.Empty,
+                    DateModification = (DateTime)record["Date_Modification"]
+                };
+                listPublication.Add(publication);
+            }
 
-            return publication;
+            return listPublication;
         }
 
 

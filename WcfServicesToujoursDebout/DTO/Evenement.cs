@@ -27,6 +27,7 @@ namespace WcfServicesToujoursDebout
             IdUserModification = 0;
             UserModification_Libelle = string.Empty;
             DateModification = new DateTime();
+            Statut = string.Empty;
         }
 
         #region Données Evenement
@@ -86,6 +87,8 @@ namespace WcfServicesToujoursDebout
         /// </summary>
         public DateTime DateModification { get; set; }
 
+        public string Statut { get; set; }
+
         #endregion
 
         #region Méthode interne
@@ -102,7 +105,7 @@ namespace WcfServicesToujoursDebout
                 new SqlParameter("@idEvenement", idEvenement)
             };
 
-            return procedure.Execute<Evenement>(ListProcedure.RecupererEvenement, sqlParam);
+            return procedure.Execute<Evenement>(ListProcedure.RecupererEvenement, sqlParam)[0];
         }
 
         internal static List<Evenement> RecupererListEvenement(int idUtilisateur)
@@ -117,7 +120,7 @@ namespace WcfServicesToujoursDebout
 
             return new List<Evenement>();
         }
-        
+
         /// <summary>
         /// Inserer un Evenement.
         /// </summary>
@@ -183,26 +186,30 @@ namespace WcfServicesToujoursDebout
             return true;
         }
 
-        Evenement IEntite<Evenement>.Remplire(SqlDataReader data)
+        List<Evenement> IEntite<Evenement>.Remplire(SqlDataReader data)
         {
-            data.Read();
-            IDataRecord record = data;
-            Evenement evenement = new Evenement
+            List<Evenement> listEvenement = new List<Evenement>();
+            while (data.Read())
             {
-                Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"],
-                Titre = (string)record["Titre"],
-                Adresse = (string)record["Adresse"],
-                Date = (DateTime)record["Date_Creation"],
-                Description = (string)record["Adresse"],
-                IdUserCreation = string.IsNullOrEmpty(Convert.ToString(record["User_Creation"])) ? -1 : (int)record["User_Creation"],
-                UserCreation_Libelle = string.Empty,
-                DateCreation = (DateTime)record["Date_Creation"],
-                IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"],
-                UserModification_Libelle = string.Empty,
-                DateModification = (DateTime)record["Date_Modification"]
-            };
+                IDataRecord record = data;
+                Evenement evenement = new Evenement
+                {
+                    Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"],
+                    Titre = (string)record["Titre"],
+                    Adresse = (string)record["Adresse"],
+                    Date = (DateTime)record["Date_Creation"],
+                    Description = (string)record["Adresse"],
+                    IdUserCreation = string.IsNullOrEmpty(Convert.ToString(record["User_Creation"])) ? -1 : (int)record["User_Creation"],
+                    UserCreation_Libelle = string.Empty,
+                    DateCreation = (DateTime)record["Date_Creation"],
+                    IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"],
+                    UserModification_Libelle = string.Empty,
+                    DateModification = (DateTime)record["Date_Modification"]
+                };
+                listEvenement.Add(evenement);
+            }
 
-            return evenement;
+            return listEvenement;
         }
 
 

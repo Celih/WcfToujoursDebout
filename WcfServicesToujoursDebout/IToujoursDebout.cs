@@ -19,6 +19,12 @@ namespace WcfServicesToujoursDebout
         Utilisateur GetUtilisateur(int idUtilisateur);
 
         [OperationContract]
+        List<Evenement> GetListEvenement(int idUtilisateur);
+
+        [OperationContract]
+        List<Tag> GetListTag(int idUtilisateur);
+
+        [OperationContract]
         bool InsertUtilisateur(Utilisateur user);
 
         [OperationContract]
@@ -33,9 +39,6 @@ namespace WcfServicesToujoursDebout
 
         [OperationContract]
         Evenement GetEvenement(int idEvenemenet);
-
-        [OperationContract]
-        List<Evenement> GetListEvenement(int idUtilisateur);
 
         [OperationContract]
         bool InsertEvenement(Evenement evenement);
@@ -119,9 +122,6 @@ namespace WcfServicesToujoursDebout
 
         [OperationContract]
         Tag GetTag(int idTag);
-
-        [OperationContract]
-        List<Tag> GetListTag(int idUtilisateur);
 
         [OperationContract]
         bool InsertTag(Tag tag);

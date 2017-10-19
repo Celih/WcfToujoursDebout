@@ -84,7 +84,7 @@ namespace WcfServicesToujoursDebout
                 new SqlParameter("@idMotCle", idMotCle)
             };
 
-            return procedure.Execute<MotCle>(ListProcedure.RecupererMotCle, sqlParam);
+            return procedure.Execute<MotCle>(ListProcedure.RecupererMotCle, sqlParam)[0];
         }
 
         /// <summary>
@@ -144,22 +144,27 @@ namespace WcfServicesToujoursDebout
             return true;
         }
 
-        MotCle IEntite<MotCle>.Remplire(SqlDataReader data)
+        List<MotCle> IEntite<MotCle>.Remplire(SqlDataReader data)
         {
-            data.Read();
-            IDataRecord record = data;
-            MotCle motcle = new MotCle();
+            List<MotCle> listMotCle = new List<MotCle>();
+            while (data.Read())
+            {
+                IDataRecord record = data;
+                MotCle motCle = new MotCle
+                {
+                    Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"],
+                    Libelle = (string)record["Libelle"],
+                    IdUserCreation = string.IsNullOrEmpty(Convert.ToString(record["User_Creation"])) ? -1 : (int)record["User_Creation"],
+                    UserCreation_Libelle = string.Empty,
+                    DateCreation = (DateTime)record["Date_Creation"],
+                    IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"],
+                    UserModification_Libelle = string.Empty,
+                    DateModification = (DateTime)record["Date_Modification"]
+                };
+                listMotCle.Add(motCle);
+            }
 
-            motcle.Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"];
-            motcle.Libelle = (string)record["Libelle"];
-            motcle.IdUserCreation = string.IsNullOrEmpty(Convert.ToString(record["User_Creation"])) ? -1 : (int)record["User_Creation"];
-            motcle.UserCreation_Libelle = string.Empty;
-            motcle.DateCreation = (DateTime)record["Date_Creation"];
-            motcle.IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"];
-            motcle.UserModification_Libelle = string.Empty;
-            motcle.DateModification = (DateTime)record["Date_Modification"];
-
-            return motcle;
+            return listMotCle;
         }
 
 

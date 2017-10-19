@@ -37,7 +37,7 @@ namespace WcfServicesToujoursDebout
         /// Libelle du tag.
         /// </summary>
         public string Libelle { get; set; }
-        
+
         /// <summary>
         /// Id du User de creation.
         /// </summary>
@@ -84,7 +84,7 @@ namespace WcfServicesToujoursDebout
                 new SqlParameter("@idUtilisateur", idTag)
             };
 
-            return procedure.Execute<Tag>(ListProcedure.RecupererTag, sqlParam);
+            return procedure.Execute<Tag>(ListProcedure.RecupererTag, sqlParam)[0];
         }
 
         internal static List<Tag> RecupererNewTag(int idUtilisateur)
@@ -150,25 +150,30 @@ namespace WcfServicesToujoursDebout
             return true;
         }
 
-        Tag IEntite<Tag>.Remplire(SqlDataReader data)
+        List<Tag> IEntite<Tag>.Remplire(SqlDataReader data)
         {
-            data.Read();
-            IDataRecord record = data;
-            Tag tag = new Tag();
+            List<Tag> listTag = new List<Tag>();
+            while (data.Read())
+            {
+                IDataRecord record = data;
+                Tag tag = new Tag
+                {
+                    Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"],
+                    Libelle = (string)record["Libelle"],
+                    IdUserCreation = string.IsNullOrEmpty(Convert.ToString(record["User_Creation"])) ? -1 : (int)record["User_Creation"],
+                    UserCreation_Libelle = string.Empty,
+                    DateCreation = (DateTime)record["Date_Creation"],
+                    IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"],
+                    UserModification_Libelle = string.Empty,
+                    DateModification = (DateTime)record["Date_Modification"]
+                };
+                listTag.Add(tag);
+            }
 
-            tag.Id = string.IsNullOrEmpty(Convert.ToString(record["Id"])) ? -1 : (int)record["Id"];
-            tag.Libelle = (string)record["Libelle"];
-            tag.IdUserCreation = string.IsNullOrEmpty(Convert.ToString(record["User_Creation"])) ? -1 : (int)record["User_Creation"];
-            tag.UserCreation_Libelle = string.Empty;
-            tag.DateCreation = (DateTime)record["Date_Creation"];
-            tag.IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"];
-            tag.UserModification_Libelle = string.Empty;
-            tag.DateModification = (DateTime)record["Date_Modification"];
-
-            return tag;
+            return listTag;
         }
 
-        
+
 
 
 
