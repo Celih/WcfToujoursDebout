@@ -25,6 +25,9 @@ namespace WcfServicesToujoursDebout
         List<Tag> GetListTag(int idUtilisateur);
 
         [OperationContract]
+        List<News> GetListNews(int idUtilisateur, string recherche);
+
+        [OperationContract]
         bool InsertUtilisateur(Utilisateur user);
 
         [OperationContract]
@@ -32,6 +35,15 @@ namespace WcfServicesToujoursDebout
 
         [OperationContract]
         bool DeleteUtilisateur(int idUtilisateur);
+
+        [OperationContract]
+        bool UtilisateurParticipeEven(int idUtilisateur, int idEvenemenet, string statut);
+
+        [OperationContract]
+        bool GetParticipationEvenement(int idUtilisateur, int idEvenemenet);
+
+        [OperationContract]
+        bool Connection(string mail, string pseudo, string password);
 
         #endregion
 

@@ -186,6 +186,19 @@ namespace WcfServicesToujoursDebout
             return true;
         }
 
+        internal static bool LierTagEvenement(int idEvenement, int idTag)
+        {
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idEvenement", idEvenement),
+                new SqlParameter("@idTag", idTag),
+            };
+
+            procedure.Execute<Utilisateur>(ListProcedure.LierTagEvenement, sqlParam);
+            return true; 
+        }
+
         List<Evenement> IEntite<Evenement>.Remplire(SqlDataReader data)
         {
             List<Evenement> listEvenement = new List<Evenement>();

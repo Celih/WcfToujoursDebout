@@ -108,6 +108,8 @@ namespace WcfServicesToujoursDebout
         /// Date de modification.
         /// </summary>
         public DateTime DateModification { get; set; }
+
+        private string password { get; set; }
         #endregion
 
         #region Méthode interne
@@ -249,6 +251,79 @@ namespace WcfServicesToujoursDebout
             return true;
         }
 
+        internal static bool UtilisateurParticipeEven(int idUtilisateur, int idEvenemenet, string statut)
+        {
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idUtilisateur", idUtilisateur),
+                new SqlParameter("@idEvenemenet", idEvenemenet),
+                new SqlParameter("@statut", statut),
+            };
+
+            procedure.Execute<Utilisateur>(ListProcedure.UtilisateurParticipeEven, sqlParam);
+            return true;
+        }
+
+        internal static List<News> GetListNews(int idUtilisateur, string recherche)
+        {
+            List<News> listNews = new List<News>();
+
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idUtilisateur", idUtilisateur),
+                new SqlParameter("@recherche", recherche)
+            };
+
+            listNews = procedure.Execute<News>(ListProcedure.RecupererListeNews, sqlParam);
+
+
+
+            return listNews;
+        }
+
+        internal static bool ParticipationEvenement(int idUtilisateur, int idEvenement)
+        {
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idUtilisateur", idUtilisateur),
+                new SqlParameter("@idEvenement", idEvenement)
+            };
+
+            List<Particite> a = procedure.Execute<Particite>(ListProcedure.ParticipeUtilisateur, sqlParam);
+            bool b = false;
+            if (a.Count > 0)
+            {
+                b = true;
+            }
+            return b;
+        }
+
+        internal static bool Connection(string mail, string pseudo, string passward)
+        {
+            bool connection = false;
+
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@mail", mail),
+                new SqlParameter("@pseudo", pseudo)
+            };
+
+            List<Utilisateur> a = procedure.Execute<Utilisateur>(ListProcedure.Connection, sqlParam);
+            foreach (var item in a)
+            {
+                if (item.password == passward)
+                {
+                    connection = true;
+                }
+            }
+
+            return connection;
+        }
+
         List<Utilisateur> IEntite<Utilisateur>.Remplire(SqlDataReader data)
         {
             List<Utilisateur> listUser = new List<Utilisateur>();
@@ -268,7 +343,8 @@ namespace WcfServicesToujoursDebout
                     DateCreation = (DateTime)record["Date_Creation"],
                     IdUserModification = string.IsNullOrEmpty(Convert.ToString(record["User_Modification"])) ? -1 : (int)record["User_Modification"],
                     UserModification_Libelle = string.Empty,
-                    DateModification = (DateTime)record["Date_Modification"]
+                    DateModification = (DateTime)record["Date_Modification"],
+                    password = (string)record["Password"]
                 };
                 listUser.Add(user);
             }

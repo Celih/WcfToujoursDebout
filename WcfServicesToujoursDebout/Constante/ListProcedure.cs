@@ -29,6 +29,26 @@ namespace WcfServicesToujoursDebout.Constante
         /// </summary>
         public const string SupprimerUtilisateur = "ToujoursDebout.dbo.DeleteUtilisateur";
 
+        /// <summary>
+        /// Procedure : DeleteUtilisateur
+        /// </summary>
+        public const string UtilisateurParticipeEven = "ToujoursDebout.dbo.UtilisateurParticipeEven";
+
+        /// <summary>
+        /// Procedure : DeleteUtilisateur
+        /// </summary>
+        public const string RecupererListeNews = "ToujoursDebout.dbo.RecupererListeNews";
+
+        /// <summary>
+        /// Procedure : ParticipeUtilisateur
+        /// </summary>
+        public const string ParticipeUtilisateur = "ToujoursDebout.dbo.ParticipeUtilisateur";
+
+        /// <summary>
+        /// Procedure : Connection
+        /// </summary>
+        public const string Connection = "ToujoursDebout.dbo.Connection";
+
         #endregion
 
         #region Evenement
@@ -42,6 +62,11 @@ namespace WcfServicesToujoursDebout.Constante
         /// Procedure : GetListEvenement
         /// </summary>
         public const string RecupererListeEvenement = "ToujoursDebout.dbo.GetListEvenement";
+
+        /// <summary>
+        /// Procedure : LierTagEvenement
+        /// </summary>
+        public const string LierTagEvenement = "ToujoursDebout.dbo.LierTagEvenement";
 
         /// <summary>
         /// Procedure : GetListEvenement

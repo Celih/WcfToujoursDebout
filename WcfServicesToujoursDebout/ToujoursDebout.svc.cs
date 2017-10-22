@@ -29,6 +29,11 @@ namespace WcfServicesToujoursDebout
             return Utilisateur.GetListTag(idUtilisateur);
         }
 
+        public List<News> GetListNews(int idUtilisateur, string recherche)
+        {
+            return Utilisateur.GetListNews(idUtilisateur, recherche);
+        }
+
         public bool InsertUtilisateur(Utilisateur user)
         {
             return Utilisateur.InsererUtilisateur(user);
@@ -42,6 +47,21 @@ namespace WcfServicesToujoursDebout
         public bool DeleteUtilisateur(int idUtilisateur)
         {
             return Utilisateur.SupprimerUtilisateur(idUtilisateur);
+        }
+
+        public bool UtilisateurParticipeEven(int idUtilisateur, int idEvenemenet, string statut)
+        {
+            return Utilisateur.UtilisateurParticipeEven(idUtilisateur, idEvenemenet, statut);
+        }
+
+        public bool GetParticipationEvenement(int idUtilisateur, int idEvenemenet)
+        {
+            return Utilisateur.ParticipationEvenement(idUtilisateur, idEvenemenet);
+        }
+
+        public bool Connection(string mail, string pseudo, string password)
+        {
+            return Utilisateur.Connection(mail, pseudo, password);
         }
 
         #endregion
