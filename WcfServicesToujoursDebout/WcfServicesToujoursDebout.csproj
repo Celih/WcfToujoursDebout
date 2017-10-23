@@ -78,6 +78,7 @@
     <Compile Include="DTO\Photo.cs" />
     <Compile Include="DTO\Publication.cs" />
     <Compile Include="DTO\Tag.cs" />
+    <Compile Include="DTO\TagEvenement.cs" />
     <Compile Include="DTO\Utilisateur.cs" />
     <Compile Include="IToujoursDebout.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

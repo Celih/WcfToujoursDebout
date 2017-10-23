@@ -54,12 +54,12 @@ namespace WcfServicesToujoursDebout
             return Utilisateur.UtilisateurParticipeEven(idUtilisateur, idEvenemenet, statut);
         }
 
-        public bool GetParticipationEvenement(int idUtilisateur, int idEvenemenet)
+        public string GetParticipationEvenement(int idUtilisateur, int idEvenemenet)
         {
             return Utilisateur.ParticipationEvenement(idUtilisateur, idEvenemenet);
         }
 
-        public bool Connection(string mail, string pseudo, string password)
+        public string Connection(string mail, string pseudo, string password)
         {
             return Utilisateur.Connection(mail, pseudo, password);
         }
@@ -86,6 +86,11 @@ namespace WcfServicesToujoursDebout
         public bool DeleteEvenement(int idEvenemenet)
         {
             return Evenement.SupprimerEvenement(idEvenemenet);
+        }
+
+        public List<Tag> GetListTagEvenement(int idEvenement)
+        {
+            return Evenement.GetListTag(idEvenement);
         }
 
         #endregion
@@ -211,6 +216,11 @@ namespace WcfServicesToujoursDebout
         public bool DeleteTag(int idTag)
         {
             return Tag.SupprimerTag(idTag);
+        }
+
+        public List<Tag> GetListTagTag(string tag)
+        {
+            return Tag.GetListTag(tag);
         }
 
         #endregion

@@ -150,6 +150,26 @@ namespace WcfServicesToujoursDebout
             return true;
         }
 
+        internal static List<Tag> GetListTag(string tag)
+        {
+            if (string.IsNullOrEmpty(tag))
+            {
+                tag = "%";
+            }
+            else
+            {
+                tag = string.Format("%{0}%", tag);
+            }
+            List<Tag> a = new List<Tag>();
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@tag", tag),
+            };
+
+            return procedure.Execute<Tag>(ListProcedure.GetListTagTag, sqlParam);
+        }
+
         List<Tag> IEntite<Tag>.Remplire(SqlDataReader data)
         {
             List<Tag> listTag = new List<Tag>();

@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using WcfServicesToujoursDebout.Constante;
+using WcfServicesToujoursDebout.DTO;
 using WcfServicesToujoursDebout.Utilitaire;
 
 namespace WcfServicesToujoursDebout
@@ -197,6 +198,33 @@ namespace WcfServicesToujoursDebout
 
             procedure.Execute<Utilisateur>(ListProcedure.LierTagEvenement, sqlParam);
             return true; 
+        }
+
+        internal static List<Tag> GetListTag(int idEvenement)
+        {
+            List<Tag> listTag = new List<Tag>();
+
+            Procedure procedure = new Procedure();
+            List<SqlParameter> sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idEvenement", idEvenement)
+            };
+
+            List<TagEvenement> listTagEvenement = new List<TagEvenement>();
+            listTagEvenement = procedure.Execute<TagEvenement>(ListProcedure.RecupererListTagEvenement, sqlParam);
+
+            for (int i = 0; i < listTagEvenement.Count; i++)
+            {
+                procedure = new Procedure();
+                sqlParam = new List<SqlParameter>
+            {
+                new SqlParameter("@idTag", listTagEvenement[i].IdTag)
+            };
+
+                listTag.Add(procedure.Execute<Tag>(ListProcedure.RecupererTag, sqlParam)[0]);
+            }
+
+            return listTag;
         }
 
         List<Evenement> IEntite<Evenement>.Remplire(SqlDataReader data)

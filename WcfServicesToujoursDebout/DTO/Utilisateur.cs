@@ -283,7 +283,7 @@ namespace WcfServicesToujoursDebout
             return listNews;
         }
 
-        internal static bool ParticipationEvenement(int idUtilisateur, int idEvenement)
+        internal static string ParticipationEvenement(int idUtilisateur, int idEvenement)
         {
             Procedure procedure = new Procedure();
             List<SqlParameter> sqlParam = new List<SqlParameter>
@@ -293,17 +293,17 @@ namespace WcfServicesToujoursDebout
             };
 
             List<Particite> a = procedure.Execute<Particite>(ListProcedure.ParticipeUtilisateur, sqlParam);
-            bool b = false;
+            string b = string.Empty;
             if (a.Count > 0)
             {
-                b = true;
+                b = a[0].Statut;
             }
             return b;
         }
 
-        internal static bool Connection(string mail, string pseudo, string passward)
+        internal static string Connection(string mail, string pseudo, string passward)
         {
-            bool connection = false;
+            string connection = string.Empty;
 
             Procedure procedure = new Procedure();
             List<SqlParameter> sqlParam = new List<SqlParameter>
@@ -317,7 +317,7 @@ namespace WcfServicesToujoursDebout
             {
                 if (item.password == passward)
                 {
-                    connection = true;
+                    connection = item.Id.ToString();
                 }
             }
 

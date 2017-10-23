@@ -88,6 +88,8 @@ namespace WcfServicesToujoursDebout.Constante
         /// </summary>
         public const string SupprimerEvenement = "ToujoursDebout.dbo.DeleteEvenement";
 
+        public const string RecupererListTagEvenement = "ToujoursDebout.dbo.GetListTagEvenement";
+
         #endregion
 
         #region FAQ
@@ -207,6 +209,8 @@ namespace WcfServicesToujoursDebout.Constante
         /// Procedure : DeleteTag
         /// </summary>
         public const string SupprimerTag = "ToujoursDebout.dbo.DeleteTag";
+
+        public const string GetListTagTag = "ToujoursDebout.dbo.GetListTagTag";
 
         #endregion
 

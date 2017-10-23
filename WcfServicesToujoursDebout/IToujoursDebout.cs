@@ -40,10 +40,10 @@ namespace WcfServicesToujoursDebout
         bool UtilisateurParticipeEven(int idUtilisateur, int idEvenemenet, string statut);
 
         [OperationContract]
-        bool GetParticipationEvenement(int idUtilisateur, int idEvenemenet);
+        string GetParticipationEvenement(int idUtilisateur, int idEvenemenet);
 
         [OperationContract]
-        bool Connection(string mail, string pseudo, string password);
+        string Connection(string mail, string pseudo, string password);
 
         #endregion
 
@@ -60,6 +60,9 @@ namespace WcfServicesToujoursDebout
 
         [OperationContract]
         bool DeleteEvenement(int idEvenemenet);
+
+        [OperationContract]
+        List<Tag> GetListTagEvenement(int idEvenement);
 
         #endregion
 
@@ -143,6 +146,9 @@ namespace WcfServicesToujoursDebout
 
         [OperationContract]
         bool DeleteTag(int idTag);
+
+        [OperationContract]
+        List<Tag> GetListTagTag(string tag);
 
         #endregion
 
