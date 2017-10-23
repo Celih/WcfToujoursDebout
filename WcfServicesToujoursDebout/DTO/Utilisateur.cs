@@ -109,7 +109,7 @@ namespace WcfServicesToujoursDebout
         /// </summary>
         public DateTime DateModification { get; set; }
 
-        private string password { get; set; }
+        public string password { get; set; }
         #endregion
 
         #region Méthode interne
@@ -203,6 +203,7 @@ namespace WcfServicesToujoursDebout
                 new SqlParameter("@Pseudo", user.Pseudo),
                 new SqlParameter("@IdPhoto", user.IdPhoto),
                 new SqlParameter("@User_Creation", user.IdUserCreation),
+                new SqlParameter("@password", user.password),
             };
 
             procedure.Execute<Utilisateur>(ListProcedure.InsererUtilisateur, sqlParam);
@@ -226,6 +227,8 @@ namespace WcfServicesToujoursDebout
                 new SqlParameter("@Pseudo", user.Pseudo),
                 new SqlParameter("@IdPhoto", user.IdPhoto),
                 new SqlParameter("@User_Modification", user.IdUserModification),
+                new SqlParameter("@password", user.password),
+
             };
 
             procedure.Execute<Utilisateur>(ListProcedure.ModifierUtilisateur, sqlParam);
@@ -257,7 +260,7 @@ namespace WcfServicesToujoursDebout
             List<SqlParameter> sqlParam = new List<SqlParameter>
             {
                 new SqlParameter("@idUtilisateur", idUtilisateur),
-                new SqlParameter("@idEvenemenet", idEvenemenet),
+                new SqlParameter("@idEvenement", idEvenemenet),
                 new SqlParameter("@statut", statut),
             };
 
